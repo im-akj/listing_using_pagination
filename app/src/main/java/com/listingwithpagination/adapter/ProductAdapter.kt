@@ -56,4 +56,8 @@ class ProductAdapter @Inject constructor() :
             }
         }
     }
+
+    fun isLast(findLastVisibleItemPosition: Int): Boolean {
+        return itemCount - 1 == findLastVisibleItemPosition
+    }
 }

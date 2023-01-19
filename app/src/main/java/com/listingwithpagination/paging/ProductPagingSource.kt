@@ -25,10 +25,10 @@ class ProductPagingSource(private val apiService: ApiService) : PagingSource<Int
                     prevKey = if (currentPage == 1) null else -1,
                     nextKey = currentPage.plus(1))
             } else {
-                LoadResult.Error(Exception("Data is empty"))
+                LoadResult.Error(java.lang.RuntimeException("No more data"))
             }
         } catch (e: Exception) {
-            LoadResult.Error(Exception("Data not available"))
+            LoadResult.Error(e)
         }
 
     }
