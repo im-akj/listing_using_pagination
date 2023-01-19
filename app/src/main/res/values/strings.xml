@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Listing With Pagination</string>
+    <string name="oos">Out of Stock</string>
 </resources>

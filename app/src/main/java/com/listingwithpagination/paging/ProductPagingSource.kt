@@ -19,7 +19,6 @@ class ProductPagingSource(private val apiService: ApiService) : PagingSource<Int
             if(data.isNotEmpty()) {
                 val responseData = mutableListOf<Product>()
                 responseData.addAll(data)
-
                 LoadResult.Page(
                     data = responseData,
                     prevKey = if (currentPage == 1) null else -1,

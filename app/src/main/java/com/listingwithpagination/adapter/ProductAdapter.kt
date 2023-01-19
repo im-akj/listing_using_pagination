@@ -1,6 +1,7 @@
 package com.listingwithpagination.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,9 +14,19 @@ import javax.inject.Inject
 
 class ProductAdapter @Inject constructor() :
     PagingDataAdapter<Product, ImageViewHolder>(diffCallback) {
-
+    private val favoritesState = HashMap<Int, Boolean>()
     inner class ImageViewHolder(val binding: ProductLayoutBinding) :
-        ViewHolder(binding.root)
+        ViewHolder(binding.root) {
+            init {
+                binding.actionBtn.setOnClickListener {
+                }
+                binding.addToWishlist.setOnClickListener {
+                    val state = favoritesState.getOrDefault(absoluteAdapterPosition, false);
+                    favoritesState[absoluteAdapterPosition] = !state
+                    binding.addToWishlist.setImageResource(if(!state) android.R.drawable.star_on else android.R.drawable.star_off)
+                }
+            }
+        }
 
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<Product>() {
@@ -45,13 +56,22 @@ class ProductAdapter @Inject constructor() :
             holder.itemView.apply {
                 tvName.text = "${item?.name}"
                 tvPrice.text = "₹${item?.final_price}"
-                ratingBar.rating = item?.rating?:0F
+                ratingBar.rating = item?.rating ?: 0F
                 ratingBarTxt.text = "(${item?.rating_count})"
-//                tvGender.text = "${currChar?.gender}"
-
+                addToWishlist.setImageResource(if(favoritesState.getOrDefault(position, false)) android.R.drawable.star_on else android.R.drawable.star_off)
                 imageView.load(item?.image_url) {
                     crossfade(true)
                     crossfade(1000)
+                }
+
+                if ((item?.quantity ?: 0) < 1) {
+                    imageView.alpha = 0.4F
+                    oosTxt.visibility = View.VISIBLE
+                    actionBtn.text = "Notify Me"
+                } else {
+                    imageView.alpha = 1F
+                    oosTxt.visibility = View.GONE
+                    actionBtn.text = item?.button_text ?: "Add to Bag"
                 }
             }
         }
